@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxx.drug.dao.DrugMapper">
+  <resultMap id="BaseResultMap" type="com.hxx.drug.bean.Drug">
+    <id column="did" jdbcType="INTEGER" property="did" />
+    <result column="dname" jdbcType="VARCHAR" property="dname" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="dprice" jdbcType="DOUBLE" property="dprice" />
+    <result column="produce_date" jdbcType="VARCHAR" property="produceDate" />
+    <result column="use_time" jdbcType="INTEGER" property="useTime" />
+    <result column="cid" jdbcType="INTEGER" property="cid" />
+    <result column="bid" jdbcType="INTEGER" property="bid" />
+    <result column="dsize" jdbcType="VARCHAR" property="dsize" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="component" jdbcType="VARCHAR" property="component" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    did, dname, is_del, dprice, produce_date, use_time, cid, bid, dsize, remark, component
+  </sql>
+  <select id="selectAllNoParame" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from t_drug where is_del=0
+  </select>
+  <select id="selectCount" parameterType="com.hxx.drug.bean.Drug" resultType="java.lang.Integer">
+    select count(*) from t_drug where is_del=0
+    <if test="dname != null">
+      and dname like '%${dname}%'
+    </if>
+    <if test="cid != null">
+      and cid = #{cid}
+    </if>
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.hxx.drug.bean.Drug">
+    select
+    <include refid="Base_Column_List" />
+    from t_drug where is_del=0
+    <if test="dname != null">
+      and dname like '%${dname}%'
+    </if>
+    <if test="cid != null">
+      and cid = #{cid}
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_drug
+    where did = #{did,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_drug
+    where did = #{did,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hxx.drug.bean.Drug">
+    insert into t_drug (did, dname, is_del, 
+      dprice, produce_date, use_time, 
+      cid, bid, dsize, remark, 
+      component)
+    values (#{did,jdbcType=INTEGER}, #{dname,jdbcType=VARCHAR}, #{isDel,jdbcType=INTEGER}, 
+      #{dprice,jdbcType=DOUBLE}, #{produceDate}, #{useTime}, 
+      #{cid,jdbcType=INTEGER}, #{bid,jdbcType=INTEGER}, #{dsize,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{component,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hxx.drug.bean.Drug">
+    insert into t_drug
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="did != null">
+        did,
+      </if>
+      <if test="dname != null">
+        dname,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="dprice != null">
+        dprice,
+      </if>
+      <if test="produceDate != null">
+        produce_date,
+      </if>
+      <if test="useTime != null">
+        use_time,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="bid != null">
+        bid,
+      </if>
+      <if test="dsize != null">
+        dsize,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="component != null">
+        component,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="did != null">
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="dname != null">
+        #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="dprice != null">
+        #{dprice,jdbcType=DOUBLE},
+      </if>
+      <if test="produceDate != null">
+        #{produceDate},
+      </if>
+      <if test="useTime != null">
+        #{useTime},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="bid != null">
+        #{bid,jdbcType=INTEGER},
+      </if>
+      <if test="dsize != null">
+        #{dsize,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="component != null">
+        #{component,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hxx.drug.bean.Drug">
+    update t_drug
+    <set>
+      <if test="dname != null">
+        dname = #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="dprice != null">
+        dprice = #{dprice,jdbcType=DOUBLE},
+      </if>
+      <if test="produceDate != null">
+        produce_date = #{produceDate},
+      </if>
+      <if test="useTime != null">
+        use_time = #{useTime},
+      </if>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="bid != null">
+        bid = #{bid,jdbcType=INTEGER},
+      </if>
+      <if test="dsize != null">
+        dsize = #{dsize,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="component != null">
+        component = #{component,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hxx.drug.bean.Drug">
+    update t_drug
+    set dname = #{dname,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=INTEGER},
+      dprice = #{dprice,jdbcType=DOUBLE},
+      produce_date = #{produceDate},
+      use_time = #{useTime},
+      cid = #{cid,jdbcType=INTEGER},
+      bid = #{bid,jdbcType=INTEGER},
+      dsize = #{dsize,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      component = #{component,jdbcType=VARCHAR}
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+
+</mapper>
