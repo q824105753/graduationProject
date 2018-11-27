@@ -3,6 +3,7 @@ package com.hxx.drug.bean;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 @Entity
 public class Stock {
@@ -19,6 +20,8 @@ public class Stock {
     private Integer uid;
 
     private Integer lowLimit;
+    @Transient
+    private Drug drug;
 
     //分页  ----------------------
 
@@ -90,5 +93,13 @@ public class Stock {
 
     public void setLowLimit(Integer lowLimit) {
         this.lowLimit = lowLimit;
+    }
+
+    public Drug getDrug() {
+        return drug;
+    }
+
+    public void setDrug(Drug drug) {
+        this.drug = drug;
     }
 }

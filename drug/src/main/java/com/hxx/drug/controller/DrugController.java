@@ -33,6 +33,17 @@ public class DrugController {
     @Autowired
     private UserMapper userMapper;
 
+    @RequestMapping("/drugDelList")
+    public ModelAndView drugDelList() {
+        List<Drug> drugList = drugMapper.selectAllDel();
+        for(Drug drug1:drugList){
+            drug1.setBusiness(businessMapper.selectByPrimaryKey(drug1.getBid()));
+            drug1.setCategory(categoryMapper.selectByPrimaryKey(drug1.getCid()));
+        }
+        ModelAndView mav = new ModelAndView("drug-del", "page", drugList);
+        return mav;
+    }
+
     @RequestMapping("/toDrugUpdate")
     public ModelAndView toDrugUpdate(Integer did) {
         ModelAndView mav = new ModelAndView("drug-update", "blist",businessMapper.selectAllNoParame());
@@ -51,7 +62,7 @@ public class DrugController {
     @RequestMapping("/drugList")
     public ModelAndView toDrug(Drug drug, Integer pageNo) {
         if (drug.getSize() == null) {
-            drug.setSize(8);
+            drug.setSize(6);
         }
         if (pageNo == null) {
             pageNo = 1;
@@ -93,13 +104,22 @@ public class DrugController {
         return map;
     }
 
+    @RequestMapping("/delDrug")
+    @ResponseBody
+    public Map delDrug(Integer did) {
+        Map map = new HashMap();
+        map.put("result",drugMapper.deleteByPrimaryKey(did));
+        return map;
+    }
+
     @RequestMapping("/resetDelDrug")
-    public ModelAndView resetDelDrug(Integer did) {
-        ModelAndView mav = new ModelAndView();
+    @ResponseBody
+    public Map resetDelDrug(Integer did) {
+        Map map = new HashMap();
         Drug drug  = drugMapper.selectByPrimaryKey(did);
         drug.setIsDel(0);
-        mav.addObject("result",drugMapper.updateByPrimaryKeySelective(drug));
-        return mav;
+        map.put("result",drugMapper.updateByPrimaryKeySelective(drug));
+        return map;
     }
 
     @RequestMapping("/updateDrug")
@@ -112,6 +132,10 @@ public class DrugController {
     Pagination findAllDrug(Drug drug, Integer pageNo){
         drug.setCurrentPage((pageNo-1)*drug.getSize());
         List<Drug> dlist = drugMapper.selectAll(drug);
+        for(Drug drug1:dlist){
+            drug1.setBusiness(businessMapper.selectByPrimaryKey(drug1.getBid()));
+            drug1.setCategory(categoryMapper.selectByPrimaryKey(drug1.getCid()));
+        }
         Pagination page = new Pagination(pageNo,drug.getSize(),drugMapper.selectCount(drug));
         StringBuilder params = new StringBuilder();
         params.append("size=" + drug.getSize());

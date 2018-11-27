@@ -19,7 +19,11 @@ public interface BusinessMapper {
 
     int updateByPrimaryKey(Business record);
 
-    List<Business> selectAll();
+    List<Business> selectAll(Business business);
 
     List<Business> selectAllNoParame();
+
+    Integer selectCount(Business business);
+
+    List<Business> selectAllDel();
 }

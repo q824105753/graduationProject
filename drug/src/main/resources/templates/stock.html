@@ -99,8 +99,8 @@
                         <th>药品名称</th>
                         <th>库存数量</th>
                         <th>低限</th>
-                        <th>最后修改时间</th>
-                        <th>最后修改人</th>
+                        <!--<th>最后修改时间</th>-->
+                        <!--<th>最后修改人</th>-->
                         <th style="width: 80px;">操作</th>
                     </tr>
                     </thead>
@@ -110,20 +110,20 @@
                         <form th:id="${d.sid }+'stockForm'" method="post">
                             <input type="hidden" th:id="${d.sid }+'sid'" name="sid" th:value="${d.sid }"
                                    style="width:50px;height:10px">
-                            <td th:text="${d.sid }">
-                            </td>
-                            <td><input type="text" th:id="${d.sid }+'did'" name="did" th:value="${d.did }"
-                                       style="width:50px;height:10px" disabled="disabled"></td>
+                            <td th:text="${d.sid }"></td>
+                            <td th:text="${d.drug.dname }"></td>
+                            <!--<td><input type="text" th:id="${d.sid }+'did'" name="did" th:value="${d.did }"-->
+                                       <!--style="width:50px;height:10px" disabled="disabled"></td>-->
                             <td><input type="text" th:id="${d.sid }+'amount'" name="amount" th:value="${d.amount }"
                                        style="width:50px;height:10px" disabled="disabled"></td>
                             <td><input type="text" th:id="${d.sid }+'lowLimit'" name="lowLimit"
                                        th:value="${d.lowLimit }"
                                        style="width:50px;height:10px" disabled="disabled"></td>
-                            <td><input type="text" th:id="${d.sid }+'updateTime'" name="updateTime"
-                                       th:value="${d.updateTime }"
-                                       style="width:210px;height:10px" disabled="disabled"></td>
-                            <td><input type="text" th:id="${d.sid }+'uid'" name="uid" th:value="${d.uid }"
-                                       style="width:50px;height:10px" disabled="disabled"></td>
+                            <!--<td><input type="text" th:id="${d.sid }+'updateTime'" name="updateTime"-->
+                                       <!--th:value="${d.updateTime }"-->
+                                       <!--style="width:210px;height:10px" disabled="disabled"></td>-->
+                            <!--<td><input type="text" th:id="${d.sid }+'uid'" name="uid" th:value="${d.uid }"-->
+                                       <!--style="width:50px;height:10px" disabled="disabled"></td>-->
                             <td>
                                 <a href="javascript:;" th:id="${d.sid}" onclick="javascript:disabledStock(this)"><i
                                         class="icon-pencil"></i></a>

@@ -11,15 +11,23 @@
   <sql id="Base_Column_List" >
     bid, bname, btel, b_address, is_del
   </sql>
+  <select id="selectAllDel" resultMap="BaseResultMap" parameterType="com.hxx.drug.bean.Business" >
+    select
+    <include refid="Base_Column_List" />
+    from t_business where is_del=1
+  </select>
   <select id="selectAllNoParame" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_business where is_del=0
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectCount" resultType="Integer" parameterType="com.hxx.drug.bean.Business" >
+    select count(*) from t_business where is_del=0
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.hxx.drug.bean.Business" >
     select
     <include refid="Base_Column_List" />
-    from t_business where is_del=0
+    from t_business where is_del=0 limit #{currentPage},#{size}
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 

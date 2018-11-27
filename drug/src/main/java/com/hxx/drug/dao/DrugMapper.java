@@ -23,4 +23,6 @@ public interface DrugMapper {
     List<Drug> selectAllNoParame();
 
     Integer selectCount(Drug drug);
+
+    List<Drug> selectAllDel();
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>库存添加页</title>
+    <title>供应商修改页</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -71,33 +71,28 @@
 
     <div class="header">
 
-        <h1 class="page-title">添加库存</h1>
+        <h1 class="page-title">修改供应商</h1>
     </div>
 
     <div class="container-fluid">
         <div class="row-fluid">
 
-
             <div class="well">
-                <form id="stock" action="#" method="post" enctype="multipart/form-data">
+                <form id="business" action="#" method="post" th:object="${business}" enctype="multipart/form-data">
                     <div class="btn-toolbar">
-                        <button type="button" class="btn btn-primary" onclick="insertStock()"><i class="icon-save">添加</i></button>
+                        <button type="button" class="btn btn-primary" onclick="updateBusiness()"><i class="icon-save">修改</i></button>
                         <div class="btn-group"></div>
                     </div>
 
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane active in" id="home">
-
-                            <label>药品名称</label>
-                            <select name="did">
-                                <option value="">请选择类型</option>
-                                <option th:each="d:${dlist }" th:value="${d.did}"><span th:text="${d.dname}"></span>
-                                </option>
-                            </select>
-                            <label>库存数量</label>
-                            <input type="text" name="amount" value="" class="input-xlarge">
-                            <label>低限</label>
-                            <input type="text" name="lowLimit" value="" class="input-xlarge">
+                            <input type="hidden" name="bid" th:field="*{bid}" class="input-xlarge">
+                            <label>供应商名称</label>
+                            <input type="text" th:field="*{bname}" name="bname" value="" class="input-xlarge">
+                            <label>电话号码</label>
+                            <input type="text" th:field="*{btel}" name="btel" value="" class="input-xlarge">
+                            <label>地址</label>
+                            <input type="text" th:field="*{bAddress}" name="bAddress" value="" class="input-xlarge">
 
                         </div>
                     </div>
@@ -119,15 +114,13 @@
         });
     });
     if (session.user == null) window.location.href = "/toToLogin";
-    function insertStock() {
-        $.post('/insertStock', $('#stock').serialize(), function (data) {
+    function updateBusiness() {
+        $.post('/updateBusiness', $('#business').serialize(), function (data) {
             if(data.result==1){
-                alert("添加成功");
-                window.location.href = "/stockList";
+                alert("修改成功");
+                window.location.href = "/businessList";
             }else if(data.result==0){
-                alert("添加失败，请刷新重试");
-            }else if(data.result==-1){
-                alert("已有该库存，请误重复添加");
+                alert("修改失败，请刷新重试");
             }
         }, 'json');
     }

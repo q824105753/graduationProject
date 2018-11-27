@@ -17,6 +17,17 @@
   <sql id="Base_Column_List">
     did, dname, is_del, dprice, produce_date, use_time, cid, bid, dsize, remark, component
   </sql>
+  <select id="selectAllDel" resultMap="BaseResultMap" parameterType="com.hxx.drug.bean.Drug" >
+    select
+    <include refid="Base_Column_List" />
+    from t_drug where is_del=1
+    <if test="dname != null">
+      and dname like '%${dname}%'
+    </if>
+    <if test="cid != null">
+      and cid = #{cid}
+    </if>
+  </select>
   <select id="selectAllNoParame" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List" />

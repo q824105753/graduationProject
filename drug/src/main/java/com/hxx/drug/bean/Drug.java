@@ -3,6 +3,7 @@ package com.hxx.drug.bean;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
 @Entity
 public class Drug {
@@ -29,6 +30,10 @@ public class Drug {
     private String remark;
 
     private String component;
+    @Transient
+    private Category category;
+    @Transient
+    private Business business;
 
     //分页  ----------------------
 
@@ -140,5 +145,21 @@ public class Drug {
 
     public void setComponent(String component) {
         this.component = component == null ? null : component.trim();
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Business getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(Business business) {
+        this.business = business;
     }
 }

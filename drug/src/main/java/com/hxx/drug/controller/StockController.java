@@ -67,18 +67,23 @@ public class StockController {
     @ResponseBody
     public Map insertStock(Stock stock,HttpSession session) {
         Map map = new HashMap();
-        stock.setUpdateTime(Tool.dateToString(new Date()));
-        User user = (User)session.getAttribute("user");
-        stock.setUid(user.getUid());
-        map.put("result", stockMapper.insertSelective(stock));
+        Drug drug = drugMapper.selectByPrimaryKey(stock.getDid());
+        if(drug==null){
+            stock.setUpdateTime(Tool.dateToString(new Date()));
+            User user = (User)session.getAttribute("user");
+            stock.setUid(user.getUid());
+            map.put("result", stockMapper.insertSelective(stock));
+        }
+        map.put("result", -1);
         return map;
     }
 
     @RequestMapping("/delStock")
-    public ModelAndView delStock(Integer sid) {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("result", stockMapper.deleteByPrimaryKey(sid));
-        return mav;
+    @ResponseBody
+    public Map delStock(Integer sid) {
+        Map map = new HashMap();
+        map.put("result", stockMapper.deleteByPrimaryKey(sid));
+        return map;
     }
 
     @RequestMapping("/updateStock")
@@ -95,6 +100,9 @@ public class StockController {
     Pagination findAllStock(Stock stock, Integer pageNo) {
         stock.setCurrentPage((pageNo - 1) * stock.getSize());
         List<Stock> slist = stockMapper.selectAll(stock);
+        for(Stock stock1:slist){
+            stock1.setDrug(drugMapper.selectByPrimaryKey(stock1.getDid()));
+        }
         Integer count = stockMapper.selectCount(stock);
         Pagination page = new Pagination(pageNo, stock.getSize(), count);
         StringBuilder params = new StringBuilder();

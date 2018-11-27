@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>库存添加页</title>
+    <title>用户添加页</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -71,7 +71,7 @@
 
     <div class="header">
 
-        <h1 class="page-title">添加库存</h1>
+        <h1 class="page-title">添加用户</h1>
     </div>
 
     <div class="container-fluid">
@@ -79,25 +79,30 @@
 
 
             <div class="well">
-                <form id="stock" action="#" method="post" enctype="multipart/form-data">
+                <form id="user" action="#" method="post" enctype="multipart/form-data">
                     <div class="btn-toolbar">
-                        <button type="button" class="btn btn-primary" onclick="insertStock()"><i class="icon-save">添加</i></button>
+                        <button type="button" class="btn btn-primary" onclick="insertUser()"><i class="icon-save">添加</i></button>
                         <div class="btn-group"></div>
                     </div>
 
                     <div id="myTabContent" class="tab-content">
                         <div class="tab-pane active in" id="home">
 
-                            <label>药品名称</label>
-                            <select name="did">
-                                <option value="">请选择类型</option>
-                                <option th:each="d:${dlist }" th:value="${d.did}"><span th:text="${d.dname}"></span>
-                                </option>
-                            </select>
-                            <label>库存数量</label>
-                            <input type="text" name="amount" value="" class="input-xlarge">
-                            <label>低限</label>
-                            <input type="text" name="lowLimit" value="" class="input-xlarge">
+                            <label>用户名</label>
+                            <input type="text" id="uname" name="uname" value="" class="input-xlarge">
+                            <label>密码</label>
+                            <input type="password" id="pwd" name="upwd" value="" class="input-xlarge">
+                            <label>重复密码</label>
+                            <input type="password" id="pwd1"  value="" class="input-xlarge">
+                            <label>真实姓名</label>
+                            <input type="text" name="realName" value="" class="input-xlarge">
+                            <label>电话</label>
+                            <input type="text" name="utel" value="" class="input-xlarge">
+                            <label>类别</label>
+                            <!--<div th:if="${product.isdel==1}">-->
+                                <input type="radio" name="type" value="admin" title="管理员" class="input-xlarge">管理员
+                                <input type="radio" name="type" value="user" title="普通用户" class="input-xlarge" checked="checked">普通用户
+                            <!--</div>-->
 
                         </div>
                     </div>
@@ -119,15 +124,23 @@
         });
     });
     if (session.user == null) window.location.href = "/toToLogin";
-    function insertStock() {
-        $.post('/insertStock', $('#stock').serialize(), function (data) {
-            if(data.result==1){
-                alert("添加成功");
-                window.location.href = "/stockList";
-            }else if(data.result==0){
-                alert("添加失败，请刷新重试");
-            }else if(data.result==-1){
-                alert("已有该库存，请误重复添加");
+    function insertUser() {
+        $.post('/findUserByUname?uname='+$('#uname').val(), {}, function (data1) {
+            if(data1.result==0){
+                if(($('#pwd').val())==($('#pwd1').val())){
+                    $.post('/insertUser', $('#user').serialize(), function (data) {
+                        if(data.result==1){
+                            alert("添加成功");
+                            window.location.href = "/userList";
+                        }else if(data.result==0){
+                            alert("添加失败，请刷新重试");
+                        }
+                    }, 'json');
+                }else {
+                    alert("两次密码不一致");
+                }
+            }else {
+                alert("用户名重复");
             }
         }, 'json');
     }

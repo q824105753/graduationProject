@@ -2,10 +2,15 @@ package com.hxx.drug.controller;
 
 import com.hxx.drug.bean.User;
 import com.hxx.drug.dao.*;
+import com.hxx.drug.util.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description
@@ -26,33 +31,43 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    @RequestMapping("/selectAllUser")
-    public ModelAndView selectAllUser(User user, Integer pageNo) {
-        ModelAndView mav = new ModelAndView();
+    @RequestMapping("/toUserAdd")
+    public ModelAndView toUserAdd() {
+        ModelAndView mav = new ModelAndView("user-add");
+        return mav;
+    }
+
+    @RequestMapping("/userList")
+    public ModelAndView selectAllUser() {
+        ModelAndView mav = new ModelAndView("user","page",userMapper.selectAll());
         return mav;
     }
 
     @RequestMapping("/selectUserById")
     public ModelAndView selectUserById(Integer uid) {
-        ModelAndView mav = new ModelAndView();
+        ModelAndView mav = new ModelAndView("user-update");
         mav.addObject("user",userMapper.selectByPrimaryKey(uid));
         return mav;
     }
 
     @RequestMapping("/insertUser")
-    public ModelAndView insertUser(User user) {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("result",userMapper.insertSelective(user));
-        return mav;
+    @ResponseBody
+    public Map insertUser(User user) {
+        user.setIsDel(0);
+        Map map = new HashMap();
+        user.setUpwd(Tool.encodePassword(user.getUpwd()));
+        map.put("result",userMapper.insertSelective(user));
+        return map;
     }
 
     @RequestMapping("/softDelUser")
-    public ModelAndView softDelUser(Integer uid) {
-        ModelAndView mav = new ModelAndView();
+    @ResponseBody
+    public Map softDelUser(Integer uid) {
+        Map map = new HashMap();
         User user  = userMapper.selectByPrimaryKey(uid);
         user.setIsDel(1);
-        mav.addObject("result",userMapper.updateByPrimaryKeySelective(user));
-        return mav;
+        map.put("result",userMapper.updateByPrimaryKeySelective(user));
+        return map;
     }
 
     @RequestMapping("/resetDelUser")
@@ -65,10 +80,11 @@ public class UserController {
     }
 
     @RequestMapping("/updateUser")
-    public ModelAndView updateUser(User user) {
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("result",userMapper.updateByPrimaryKeySelective(user));
-        return mav;
+    @ResponseBody
+    public Map updateUser(User user) {
+        Map map = new HashMap();
+        map.put("result",userMapper.updateByPrimaryKeySelective(user));
+        return map;
     }
 
 }

@@ -61,24 +61,24 @@
 
     <div class="header">
 
-        <h1 class="page-title">药品管理</h1>
+        <h1 class="page-title">类别管理</h1>
     </div>
 
     <div class="container-fluid">
         <div class="row-fluid">
-            <form action="/drugList" method="post" style="padding-top:5px;" th:object="${drug}">
-                <div>
-                    <input type="text" name="pname" th:field="*{dname}"/>
-                    <select name="cid" th:field="*{cid}">
-                        <option value="">请选择类型</option>
-                        <option th:each="c:${clist }" th:value="${c.cid}"><span th:text="${c.cname}"></span></option>
-                    </select>
-                    <input class="btn" type="submit" value="查询"/>
-                </div>
-            </form>
+            <!--<form action="/drugList" method="post" style="padding-top:5px;" th:object="${drug}">-->
+                <!--<div>-->
+                    <!--<input type="text" name="pname" th:field="*{dname}"/>-->
+                    <!--<select name="cid" th:field="*{cid}">-->
+                        <!--<option value="">请选择类型</option>-->
+                        <!--<option th:each="c:${clist }" th:value="${c.cid}"><span th:text="${c.cname}"></span></option>-->
+                    <!--</select>-->
+                    <!--<input class="btn" type="submit" value="查询"/>-->
+                <!--</div>-->
+            <!--</form>-->
 
             <div class="btn-toolbar">
-                <button class="btn btn-primary" onclick="toDrugAdd()"><i class="icon-plus"></i>添加</button>
+                <button class="btn btn-primary" onclick="toCategoryAdd()"><i class="icon-plus"></i>添加</button>
                 <div class="btn-group">
                 </div>
             </div>
@@ -86,34 +86,19 @@
                 <table class="table" style="text-align: center;">
                     <thead>
                     <tr>
-                        <th>药品编号</th>
-                        <th>药品名称</th>
-                        <th>价格</th>
-                        <th>类别</th>
-                        <th>生产日期</th>
-                        <th>保质期/天</th>
-                        <th>供应商</th>
-                        <th>规格</th>
-                        <th>药品成分</th>
+                        <th>类别编号</th>
+                        <th>类别名称</th>
                         <th style="width: 80px;">操作</th>
                     </tr>
                     </thead>
                     <tbody>
 
-                    <tr th:each="d:${page.list }">
-                        <td th:text="${d.did }"></td>
-                        <td th:text="${d.dname }"></td>
-                        <td th:text="${d.dprice }"></td>
-                        <td th:text="${d.cid }"></td>
-                        <td th:text="${d.produceDate }"></td>
-                        <td th:text="${d.useTime }"></td>
-                        <td th:text="${d.bid }"></td>
-                        <td th:text="${d.dsize }"></td>
-                        <td th:text="${d.component }"></td>
+                    <tr th:each="c:${page }">
+                        <td th:text="${c.cid }"></td>
+                        <td th:text="${c.cname }"></td>
                         <td>
-                            <a href="javascript:;" th:id="${d.did}" onclick="javascript:loadDrug(this)"><i class="icon-pencil"></i></a>
-                            <a href="#myModal" data-toggle="modal" th:id="${d.did}" onclick="javascript:fuzhi(this)" role="button"><i class="icon-remove"></i></a>&nbsp;&nbsp;&nbsp;
-                            <!--<a href="javascript:;" th:id="${d.did}" onclick="javascript:repertoryList(this)">库存</a>-->
+                            <a href="javascript:;" th:id="${c.cid}" onclick="javascript:loadCategory(this)"><i class="icon-pencil"></i></a>
+                            <a href="#myModal" data-toggle="modal" th:id="${c.cid}" onclick="javascript:fuzhi(this)" role="button"><i class="icon-remove"></i></a>&nbsp;&nbsp;&nbsp;
                         </td>
                     </tr>
 
@@ -123,9 +108,9 @@
             <div class="pagination">
                 <!--  class="pagination" -->
 
-                <span th:each="p:${page.pageView }">
-		<span class="page" th:utext="${p }"></span>
-	</span>
+                <!--<span th:each="p:${page.pageView }">-->
+		<!--<span class="page" th:utext="${p }"></span>-->
+	<!--</span>-->
 
             </div>
 
@@ -139,7 +124,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-                    <button class="btn btn-danger" data-dismiss="modal" onclick="delDrug()">删除</button>
+                    <button class="btn btn-danger" data-dismiss="modal" onclick="delCategory()">删除</button>
                 </div>
             </div>
 
@@ -156,23 +141,23 @@
     });
     if(session.user==null)window.location.href="/toToLogin";
     function fuzhi(obj){
-        did = $(obj).attr("id");
+        cid = $(obj).attr("id");
     }
-    function delDrug(){
-        $.post('/softDelDrug?did='+did, {}, function (data) {
+    function delCategory(){
+        $.post('/softDelCategory?cid='+cid, {}, function (data) {
             if(data.result==1){
                 alert("删除成功");
-                window.location.href = "/drugList";
+                window.location.href = "/categoryList";
             }else if(data.result==0){
                 alert("删除失败，请刷新重试");
             }
         }, 'json');
     }
-    function loadDrug(obj){
-        window.location.href="/toDrugUpdate?did="+$(obj).attr("id");
+    function loadCategory(obj){
+        window.location.href="/selectCategoryById?cid="+$(obj).attr("id");
     }
-    function toDrugAdd() {
-        window.location.href="/toDrugAdd";
+    function toCategoryAdd() {
+        window.location.href="/toCategoryAdd";
     }
 </script>
 

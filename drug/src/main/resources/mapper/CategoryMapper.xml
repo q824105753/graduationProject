@@ -9,6 +9,11 @@
   <sql id="Base_Column_List" >
     cid, cname, is_del
   </sql>
+  <select id="selectAllDel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_category where is_del=1
+  </select>
   <select id="selectAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

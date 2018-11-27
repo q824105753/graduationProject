@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>药品管理</title>
+    <title>删除药品管理</title>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
@@ -61,27 +61,12 @@
 
     <div class="header">
 
-        <h1 class="page-title">药品管理</h1>
+        <h1 class="page-title">删除药品管理</h1>
     </div>
 
     <div class="container-fluid">
         <div class="row-fluid">
-            <form action="/drugList" method="post" style="padding-top:5px;" th:object="${drug}">
-                <div>
-                    <input type="text" name="pname" th:field="*{dname}"/>
-                    <select name="cid" th:field="*{cid}">
-                        <option value="">请选择类型</option>
-                        <option th:each="c:${clist }" th:value="${c.cid}"><span th:text="${c.cname}"></span></option>
-                    </select>
-                    <input class="btn" type="submit" value="查询"/>
-                </div>
-            </form>
 
-            <div class="btn-toolbar">
-                <button class="btn btn-primary" onclick="toDrugAdd()"><i class="icon-plus"></i>添加</button>
-                <div class="btn-group">
-                </div>
-            </div>
             <div class="well">
                 <table class="table" style="text-align: center;">
                     <thead>
@@ -100,7 +85,7 @@
                     </thead>
                     <tbody>
 
-                    <tr th:each="d:${page.list }">
+                    <tr th:each="d:${page }">
                         <td th:text="${d.did }"></td>
                         <td th:text="${d.dname }"></td>
                         <td th:text="${d.dprice }"></td>
@@ -111,7 +96,7 @@
                         <td th:text="${d.dsize }"></td>
                         <td th:text="${d.component }"></td>
                         <td>
-                            <a href="javascript:;" th:id="${d.did}" onclick="javascript:loadDrug(this)"><i class="icon-pencil"></i></a>
+                            <a href="javascript:;" th:id="${d.did}" onclick="javascript:resetDelDrug(this)"><i class=""></i>√</a>&nbsp;
                             <a href="#myModal" data-toggle="modal" th:id="${d.did}" onclick="javascript:fuzhi(this)" role="button"><i class="icon-remove"></i></a>&nbsp;&nbsp;&nbsp;
                             <!--<a href="javascript:;" th:id="${d.did}" onclick="javascript:repertoryList(this)">库存</a>-->
                         </td>
@@ -121,11 +106,7 @@
                 </table>
             </div>
             <div class="pagination">
-                <!--  class="pagination" -->
 
-                <span th:each="p:${page.pageView }">
-		<span class="page" th:utext="${p }"></span>
-	</span>
 
             </div>
 
@@ -139,7 +120,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
-                    <button class="btn btn-danger" data-dismiss="modal" onclick="delDrug()">删除</button>
+                    <button class="btn btn-danger" data-dismiss="modal" onclick="realDelDrug()">删除</button>
                 </div>
             </div>
 
@@ -158,21 +139,25 @@
     function fuzhi(obj){
         did = $(obj).attr("id");
     }
-    function delDrug(){
-        $.post('/softDelDrug?did='+did, {}, function (data) {
+    function realDelDrug(){
+        $.post('/delDrug?did='+did, {}, function (data) {
             if(data.result==1){
                 alert("删除成功");
-                window.location.href = "/drugList";
+                window.location.href = "/drugDelList";
             }else if(data.result==0){
                 alert("删除失败，请刷新重试");
             }
         }, 'json');
     }
-    function loadDrug(obj){
-        window.location.href="/toDrugUpdate?did="+$(obj).attr("id");
-    }
-    function toDrugAdd() {
-        window.location.href="/toDrugAdd";
+    function resetDelDrug(obj){
+        $.post('/resetDelDrug?did='+$(obj).attr("id"), {}, function (data) {
+            if(data.result==1){
+                alert("恢复成功");
+                window.location.href = "/drugDelList";
+            }else if(data.result==0){
+                alert("恢复失败，请刷新重试");
+            }
+        }, 'json');
     }
 </script>
 

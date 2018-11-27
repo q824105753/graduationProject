@@ -17,7 +17,7 @@
     select
     <include refid="Base_Column_List" />
     from t_user
-    where uname=#{uname}
+    where uname=#{uname} and is_del=0
   </select>
   <select id="selectByUnameAndUpwd" resultMap="BaseResultMap" parameterType="com.hxx.drug.bean.User" >
     select
@@ -28,7 +28,7 @@
   <select id="selectAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from t_user
+    from t_user where is_del=0
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 

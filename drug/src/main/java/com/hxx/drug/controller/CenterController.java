@@ -2,6 +2,7 @@ package com.hxx.drug.controller;
 
 import com.hxx.drug.bean.User;
 import com.hxx.drug.dao.*;
+import com.hxx.drug.util.Tool;
 import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,7 @@ public class CenterController {
     public Map updatePwd(String upwd,  HttpSession session) {
         Map map = new HashMap();
         User param = (User)session.getAttribute("user");
-        param.setUpwd(upwd);
+        param.setUpwd(Tool.encodePassword(upwd));
         map.put("result", userMapper.updateByPrimaryKeySelective(param));
         return map;
     }
@@ -83,6 +84,8 @@ public class CenterController {
         Map map = new HashMap();
         user.setIsDel(0);
         user.setType("user");
+        String upwd = user.getUpwd();
+        user.setUpwd(Tool.encodePassword(upwd));
         int result = userMapper.insertSelective(user);
         map.put("result", result);
         return map;
@@ -123,7 +126,7 @@ public class CenterController {
     public String login(String uname, String upwd, String remember, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         User param = new User();
         param.setUname(uname);
-        param.setUpwd(upwd);
+        param.setUpwd(Tool.encodePassword(upwd));
         //判断是否点击“请记住我按钮”。空为没点击
         if (remember == null) {
             //根据用户名和密码查询商家
