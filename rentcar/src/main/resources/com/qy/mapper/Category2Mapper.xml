@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qy.mapper.Category2Mapper" >
+  <resultMap id="BaseResultMap" type="com.qy.pojo.Category2" >
+    <id column="c2id" property="c2id" jdbcType="INTEGER" />
+    <result column="c2name" property="c2name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    c2id, c2name
+  </sql>
+  <select id="selectCategory2" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_category2
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_category2
+    where c2id = #{c2id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_category2
+    where c2id = #{c2id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qy.pojo.Category2" >
+    insert into t_category2 (c2id, c2name)
+    values (#{c2id,jdbcType=INTEGER}, #{c2name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qy.pojo.Category2" >
+    insert into t_category2
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="c2id != null" >
+        c2id,
+      </if>
+      <if test="c2name != null" >
+        c2name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="c2id != null" >
+        #{c2id,jdbcType=INTEGER},
+      </if>
+      <if test="c2name != null" >
+        #{c2name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qy.pojo.Category2" >
+    update t_category2
+    <set >
+      <if test="c2name != null" >
+        c2name = #{c2name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where c2id = #{c2id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qy.pojo.Category2" >
+    update t_category2
+    set c2name = #{c2name,jdbcType=VARCHAR}
+    where c2id = #{c2id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.CheckMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.Check" >
+    <id column="checkId" property="checkid" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    checkId, state
+  </sql>
+  <select id="selectAllCheck" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_check
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_check
+    where checkId = #{checkid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_check
+    where checkId = #{checkid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hc.pojo.Check" >
+    insert into t_check (checkId, state)
+    values (#{checkid,jdbcType=INTEGER}, #{state,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.Check" >
+    insert into t_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="checkid != null" >
+        checkId,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="checkid != null" >
+        #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.Check" >
+    update t_check
+    <set >
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where checkId = #{checkid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hc.pojo.Check" >
+    update t_check
+    set state = #{state,jdbcType=VARCHAR}
+    where checkId = #{checkid,jdbcType=INTEGER}
+  </update>
+</mapper>

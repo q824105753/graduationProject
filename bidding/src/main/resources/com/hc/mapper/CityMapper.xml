@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.CityMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.City" >
+    <id column="cityId" property="cityid" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="provinceId" property="provinceid" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cityId, name, provinceId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from city
+    where cityId = #{cityid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from city
+    where cityId = #{cityid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hc.pojo.City" >
+    insert into city (cityId, name, provinceId
+      )
+    values (#{cityid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{provinceid,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.City" >
+    insert into city
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cityid != null" >
+        cityId,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="provinceid != null" >
+        provinceId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cityid != null" >
+        #{cityid,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceid != null" >
+        #{provinceid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.City" >
+    update city
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceid != null" >
+        provinceId = #{provinceid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where cityId = #{cityid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hc.pojo.City" >
+    update city
+    set name = #{name,jdbcType=VARCHAR},
+      provinceId = #{provinceid,jdbcType=BIGINT}
+    where cityId = #{cityid,jdbcType=BIGINT}
+  </update>
+</mapper>

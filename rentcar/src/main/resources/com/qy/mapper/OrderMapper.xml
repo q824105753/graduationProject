@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qy.mapper.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.qy.pojo.Order" >
+    <id column="oid" property="oid" jdbcType="INTEGER" />
+    <result column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="oflag" property="oflag" jdbcType="INTEGER" />
+    <result column="otime" property="otime" />
+    <result column="begin" property="begin" />
+    <result column="end" property="end"/>
+    <result column="totalprice" property="totalprice" jdbcType="DOUBLE" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    oid, uid, cid, oflag, otime, begin, end, totalprice, note
+  </sql>
+   <select id="selectAllOrder" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+  </select>
+  <select id="selectByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where uid = #{uid}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where oid = #{oid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_order
+    where oid = #{oid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qy.pojo.Order" >
+    insert into t_order (oid, uid, cid, 
+      oflag, otime, begin, 
+      end, totalprice, note
+      )
+    values (#{oid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, 
+      #{oflag,jdbcType=INTEGER}, #{otime}, #{begin}, 
+      #{end}, #{totalprice,jdbcType=DOUBLE}, #{note,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qy.pojo.Order" >
+    insert into t_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        oid,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="cid != null" >
+        cid,
+      </if>
+      <if test="oflag != null" >
+        oflag,
+      </if>
+      <if test="otime != null" >
+        otime,
+      </if>
+      <if test="begin != null" >
+        begin,
+      </if>
+      <if test="end != null" >
+        end,
+      </if>
+      <if test="totalprice != null" >
+        totalprice,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        #{oid,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="oflag != null" >
+        #{oflag,jdbcType=INTEGER},
+      </if>
+      <if test="otime != null" >
+        #{otime},
+      </if>
+      <if test="begin != null" >
+        #{begin},
+      </if>
+      <if test="end != null" >
+        #{end},
+      </if>
+      <if test="totalprice != null" >
+        #{totalprice,jdbcType=DOUBLE},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qy.pojo.Order" >
+    update t_order
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null" >
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="oflag != null" >
+        oflag = #{oflag,jdbcType=INTEGER},
+      </if>
+      <if test="otime != null" >
+        otime = #{otime},
+      </if>
+      <if test="begin != null" >
+        begin = #{begin},
+      </if>
+      <if test="end != null" >
+        end = #{end},
+      </if>
+      <if test="totalprice != null" >
+        totalprice = #{totalprice,jdbcType=DOUBLE},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where oid = #{oid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qy.pojo.Order" >
+    update t_order
+    set uid = #{uid,jdbcType=INTEGER},
+      cid = #{cid,jdbcType=INTEGER},
+      oflag = #{oflag,jdbcType=INTEGER},
+      otime = #{otime},
+      begin = #{begin},
+      end = #{end},
+      totalprice = #{totalprice,jdbcType=DOUBLE},
+      note = #{note,jdbcType=VARCHAR}
+    where oid = #{oid,jdbcType=INTEGER}
+  </update>
+</mapper>

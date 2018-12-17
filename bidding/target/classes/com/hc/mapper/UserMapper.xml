@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.User" >
+    <id column="userID" property="userid" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="uname" property="uname" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="isDelete" property="isdelete" jdbcType="TINYINT" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="flag" property="flag"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    userID, name, uname, pwd, sex, tel, email, isDelete, createTime, flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where userID = #{userid,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 根据用户名密码查询，用于登录 -->
+  <select id="selectByUser" resultMap="BaseResultMap" parameterType="String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where uname = #{0} and pwd = #{1}
+  </select>
+  
+ <!-- 查询删除的用户 -->
+  <select id="selectByDel" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where isDelete = 1
+  </select>
+  
+   <select id="selectUserCountByDel"  resultType="java.lang.Integer">
+    select count(*) from t_user
+    where isDelete = 1
+  </select>
+ 
+  <!-- 查询 -->
+  <select id="selectAllUserByPage" resultMap="BaseResultMap" parameterType="com.hc.pojo.User" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user where isDelete=0
+    <if test="uname != null" >
+        and uname like '%${uname}%'
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+  
+  <select id="selectAllUser" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user 
+  </select>
+  
+  <select id="selectUserCount" resultType="java.lang.Integer" parameterType="com.hc.pojo.User" >
+    select count(*) from t_user where isDelete=0
+    <if test="uname != null" >
+        and uname like '%${uname}%'
+    </if>
+  </select>
+  
+  <!-- 恢复软删除的用户 -->
+  <update id="updateDel" parameterType="java.lang.Long" >
+    update t_user
+    set isDelete = 0
+    where userID = #{userid}
+  </update>
+  <!-- 刪除用户 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_user
+    where userID = #{userid,jdbcType=BIGINT}
+  </delete>
+  
+  <!-- 添加用户 -->
+  <insert id="insert" parameterType="com.hc.pojo.User" >
+    insert into t_user (userID, name, uname, 
+      pwd, sex, tel, email, 
+      isDelete, createTime, flag)
+    values (#{userid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{uname,jdbcType=VARCHAR}, 
+      #{pwd,jdbcType=VARCHAR}, #{sex}, #{tel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{isdelete,jdbcType=TINYINT}, #{createtime,jdbcType=TIMESTAMP},#{flag})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.User" >
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userID,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="uname != null" >
+        uname,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="isdelete != null" >
+        isDelete,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uname != null" >
+        #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=TINYINT},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag,
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.User" >
+    update t_user
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="uname != null" >
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        isDelete = #{isdelete,jdbcType=TINYINT},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="flag != null" >
+        flag = #{flag},
+      </if>
+    </set>
+    where userID = #{userid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hc.pojo.User" >
+    update t_user
+    set name = #{name,jdbcType=VARCHAR},
+      uname = #{uname,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      sex = #{sex},
+      tel = #{tel,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      isDelete = #{isdelete,jdbcType=TINYINT},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      flag = #{flag}
+    where userID = #{userid,jdbcType=BIGINT}
+  </update>
+</mapper>

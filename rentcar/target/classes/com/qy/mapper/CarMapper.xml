@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qy.mapper.CarMapper">
+	<resultMap id="BaseResultMap" type="com.qy.pojo.Car">
+		<id column="cid" property="cid" jdbcType="INTEGER" />
+		<result column="cname" property="cname" jdbcType="VARCHAR" />
+		<result column="c1id" property="c1id" jdbcType="INTEGER" />
+		<result column="c2id" property="c2id" jdbcType="INTEGER" />
+		<result column="platenumber" property="platenumber" jdbcType="VARCHAR" />
+		<result column="buytime" property="buytime" jdbcType="VARCHAR" />
+		<result column="cflag" property="cflag" jdbcType="INTEGER" />
+		<result column="price" property="price" jdbcType="DOUBLE" />
+		<result column="carimg" property="carimg" jdbcType="VARCHAR" />
+		<result column="isdel" property="isdel" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		cid, cname, c1id, c2id, platenumber, buytime, cflag, price,
+		carimg, isdel
+	</sql>
+	<!-- 前台！！！查询用户租赁并且未归还的车辆 -->
+	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_car where cflag=1 and uid = #{uid}
+	</select>
+	<!-- 前台！！！   查询所有未被删除,并且处于空闲状态的车辆 -->
+	<select id="frontCarList" resultMap="BaseResultMap"
+		parameterType="com.qy.pojo.Car">
+		select
+		<include refid="Base_Column_List" />
+		from t_car where isdel=0 and cflag=0
+		<if test="cname != null">
+			and cname like '%${cname}%'
+		</if>
+		<if test="c1id != null">
+			and c1id = #{c1id}
+		</if>
+		<if test="c2id != null">
+			and c2id = #{c2id}
+		</if>
+		limit #{currentPage},#{size}
+	</select>
+	<!-- 查询总车辆数 -->
+	<select id="selectCarCount" resultType="java.lang.Integer"
+		parameterType="com.qy.pojo.Car">
+		select count(*) from t_car where isdel=0
+		<if test="cname != null">
+			and cname like '%${cname}%'
+		</if>
+		<if test="c1id != null">
+			and c1id = #{c1id}
+		</if>
+		<if test="c2id != null">
+			and c2id = #{c2id}
+		</if>
+	</select>
+	<!-- 1是删除 -->
+	<!-- 查询删除的车辆 -->
+	<select id="selectDelCar" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_car where isdel=1
+	</select>
+	<!-- 后台！！！！查询所有的车辆 -->
+	<select id="selectAllCar" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_car where isdel=0
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from t_car
+		where cid = #{cid,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from t_car
+		where cid = #{cid,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.qy.pojo.Car">
+		insert into t_car (cid, cname,
+		c1id,
+		c2id, platenumber, buytime,
+		cflag, price, carimg,isdel
+		)
+		values
+		(#{cid,jdbcType=INTEGER}, #{cname,jdbcType=VARCHAR},
+		#{c1id,jdbcType=INTEGER},
+		#{c2id,jdbcType=INTEGER},
+		#{platenumber,jdbcType=VARCHAR}, #{buytime,jdbcType=VARCHAR},
+		#{cflag,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE},
+		#{carimg,jdbcType=VARCHAR},#{isdel}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.qy.pojo.Car">
+		insert into t_car
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="cid != null">
+				cid,
+			</if>
+			<if test="cname != null">
+				cname,
+			</if>
+			<if test="c1id != null">
+				c1id,
+			</if>
+			<if test="c2id != null">
+				c2id,
+			</if>
+			<if test="platenumber != null">
+				platenumber,
+			</if>
+			<if test="buytime != null">
+				buytime,
+			</if>
+			<if test="cflag != null">
+				cflag,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="carimg != null">
+				carimg,
+			</if>
+			<if test="isdel != null">
+				isdel,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="cid != null">
+				#{cid,jdbcType=INTEGER},
+			</if>
+			<if test="cname != null">
+				#{cname,jdbcType=VARCHAR},
+			</if>
+			<if test="c1id != null">
+				#{c1id,jdbcType=INTEGER},
+			</if>
+			<if test="c2id != null">
+				#{c2id,jdbcType=INTEGER},
+			</if>
+			<if test="platenumber != null">
+				#{platenumber,jdbcType=VARCHAR},
+			</if>
+			<if test="buytime != null">
+				#{buytime,jdbcType=VARCHAR},
+			</if>
+			<if test="cflag != null">
+				#{cflag,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="carimg != null">
+				#{carimg,jdbcType=VARCHAR},
+			</if>
+			<if test="isdel != null">
+				#{isdel},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.qy.pojo.Car">
+		update t_car
+		<set>
+			<if test="cname != null">
+				cname = #{cname,jdbcType=VARCHAR},
+			</if>
+			<if test="c1id != null">
+				c1id = #{c1id,jdbcType=INTEGER},
+			</if>
+			<if test="c2id != null">
+				c2id = #{c2id,jdbcType=INTEGER},
+			</if>
+			<if test="platenumber != null">
+				platenumber = #{platenumber,jdbcType=VARCHAR},
+			</if>
+			<if test="buytime != null">
+				buytime = #{buytime,jdbcType=VARCHAR},
+			</if>
+			<if test="cflag != null">
+				cflag = #{cflag,jdbcType=INTEGER},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DOUBLE},
+			</if>
+			<if test="carimg != null">
+				carimg = #{carimg,jdbcType=VARCHAR},
+			</if>
+			<if test="isdel != null">
+				isdel = #{isdel},
+			</if>
+			<if test="uid != null">
+				uid = #{uid},
+			</if>
+		</set>
+		where cid = #{cid,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.qy.pojo.Car">
+		update t_car
+		set
+		cname = #{cname,jdbcType=VARCHAR},
+		c1id = #{c1id,jdbcType=INTEGER},
+		c2id = #{c2id,jdbcType=INTEGER},
+		platenumber =
+		#{platenumber,jdbcType=VARCHAR},
+		buytime = #{buytime,jdbcType=VARCHAR},
+		cflag = #{cflag,jdbcType=INTEGER},
+		price = #{price,jdbcType=DOUBLE},
+		carimg = #{carimg,jdbcType=VARCHAR},
+		isdel = #{isdel},
+		where cid =
+		#{cid,jdbcType=INTEGER}
+	</update>
+</mapper>

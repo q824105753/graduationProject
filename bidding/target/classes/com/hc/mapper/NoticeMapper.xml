@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.NoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.Notice" >
+    <id column="noticeId" property="noticeid" jdbcType="BIGINT" />
+    <result column="companyId" property="companyid" jdbcType="BIGINT" />
+    <result column="noticeBeginTime" property="noticebegintime" />
+    <result column="noticeStopTime" property="noticestoptime" />
+    <result column="addressId" property="addressid" jdbcType="BIGINT" />
+    <result column="itemName" property="itemname" jdbcType="VARCHAR" />
+    <result column="userID" property="userid" jdbcType="BIGINT" />
+    <result column="isIssue" property="isissue" jdbcType="TINYINT" />
+    <result column="createTime" property="createtime" />
+    <result column="isDelete" property="isdelete" jdbcType="TINYINT" />
+    <result column="detail" property="detail" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    noticeId, companyId, noticeBeginTime, noticeStopTime, addressId, itemName, userID, 
+    isIssue, createTime, isDelete, detail
+  </sql>
+  
+  <!-- 查询所有 -->
+  <select id="selectAllNoticeByPage" resultMap="BaseResultMap" parameterType="com.hc.pojo.Notice" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_notice where isDelete = 0
+    <if test="itemname != null" >
+        and itemName like '%${itemname}%'
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+  
+  <select id="selectNoticeCount" resultType="java.lang.Integer" parameterType="com.hc.pojo.Notice" >
+    select count(*) from t_notice where isDelete = 0
+    <if test="itemname != null" >
+        and itemName like '%${itemname}%'
+    </if>
+  </select>
+  
+  <select id="selectAllNotice" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_notice where isDelete = 0
+  </select>
+  
+  <!-- 查询已删除所有 -->
+  <select id="selectByNoticeDel" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_notice where isDelete = 1
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_notice
+    where noticeId = #{noticeid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_notice
+    where noticeId = #{noticeid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hc.pojo.Notice" >
+    insert into t_notice (noticeId, companyId, noticeBeginTime, 
+      noticeStopTime, addressId, itemName, 
+      userID, isIssue, createTime, 
+      isDelete, detail)
+    values (#{noticeid,jdbcType=BIGINT}, #{companyid,jdbcType=BIGINT}, #{noticebegintime,jdbcType=TIMESTAMP}, 
+      #{noticestoptime,jdbcType=TIMESTAMP}, #{addressid,jdbcType=BIGINT}, #{itemname,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=BIGINT}, #{isissue}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{isdelete},#{detail})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.Notice" >
+    insert into t_notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="noticeid != null" >
+        noticeId,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="noticebegintime != null" >
+        noticeBeginTime,
+      </if>
+      <if test="noticestoptime != null" >
+        noticeStopTime,
+      </if>
+      <if test="addressid != null" >
+        addressId,
+      </if>
+      <if test="itemname != null" >
+        itemName,
+      </if>
+      <if test="userid != null" >
+        userID,
+      </if>
+      <if test="isissue != null" >
+        isIssue,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="isdelete != null" >
+        isDelete,
+      </if>
+      <if test="detail != null" >
+        detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="noticeid != null" >
+        #{noticeid,jdbcType=BIGINT},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=BIGINT},
+      </if>
+      <if test="noticebegintime != null" >
+        #{noticebegintime},
+      </if>
+      <if test="noticestoptime != null" >
+        #{noticestoptime},
+      </if>
+      <if test="addressid != null" >
+        #{addressid,jdbcType=BIGINT},
+      </if>
+      <if test="itemname != null" >
+        #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="isissue != null" >
+        #{isissue},
+      </if>
+      <if test="createtime != null" >
+        #{createtime},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete},
+      </if>
+      <if test="detail != null" >
+        #{detail},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.Notice" >
+    update t_notice
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=BIGINT},
+      </if>
+      <if test="noticebegintime != null" >
+        noticeBeginTime = #{noticebegintime},
+      </if>
+      <if test="noticestoptime != null" >
+        noticeStopTime = #{noticestoptime},
+      </if>
+      <if test="addressid != null" >
+        addressId = #{addressid,jdbcType=BIGINT},
+      </if>
+      <if test="itemname != null" >
+        itemName = #{itemname,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userID = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="isissue != null" >
+        isIssue = #{isissue},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime},
+      </if>
+      <if test="isdelete != null" >
+        isDelete = #{isdelete},
+      </if>
+      <if test="detail != null" >
+        detail = #{detail}
+      </if>
+    </set>
+    where noticeId = #{noticeid,jdbcType=BIGINT}
+  </update>
+</mapper>

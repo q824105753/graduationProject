@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.AddressMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.Address" >
+    <id column="addressId" property="addressid" jdbcType="BIGINT" />
+    
+    <result column="addressname" property="addressname"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    addressId, addressname
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from address
+    where addressId = #{addressid,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectAllAddress" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from address
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from address
+    where addressId = #{addressid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hc.pojo.Address" useGeneratedKeys="true" keyColumn="addressId" keyProperty="addressid">
+    insert into address (addressId, addressname)
+    values (#{addressid,jdbcType=BIGINT},#{addressname})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.Address" >
+    insert into address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="addressid != null" >
+        addressId,
+      </if>
+      <if test="addressname != null" >
+        addressname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="addressid != null" >
+        #{addressid,jdbcType=BIGINT},
+      </if>
+      <if test="addressname != null" >
+        #{addressname},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.Address" >
+    update address
+    <set>
+      <if test="addressname != null" >
+        addressname = #{addressname},
+      </if>
+    </set>
+    where addressId = #{addressid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hc.pojo.Address" >
+    update address
+    set addressname = #{addressname} 
+    where addressId = #{addressid,jdbcType=BIGINT}
+  </update>
+</mapper>

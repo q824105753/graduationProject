@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.TenderMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.Tender" >
+    <id column="tenderId" property="tenderid" jdbcType="BIGINT" />
+    <result column="companyId" property="companyid" jdbcType="BIGINT" />
+    <result column="tenderName" property="tendername" jdbcType="VARCHAR" />
+    <result column="userID" property="userid" jdbcType="BIGINT" />
+    <result column="finishTime" property="finishtime" />
+    <result column="isDelete" property="isdelete" jdbcType="TINYINT" />
+    <result column="checkId" property="checkid" jdbcType="INTEGER" />
+    <result column="bidId" property="bidid" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="detail" property="detail" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tenderId, companyId, tenderName, userID, finishTime, isDelete, checkId, bidId, state, detail
+  </sql>
+  <!-- 查询所有的已签约的申请 -->
+  <select id="selectAllTenderByState" resultMap="BaseResultMap">
+    select 
+	<include refid="Base_Column_List" />
+	from t_tender
+    where state=1
+  </select>
+  
+  <!-- 前台首页显示所有的-->
+  <select id="selectAllTenderFront" resultMap="BaseResultMap" parameterType="com.hc.pojo.Tender">
+    select 
+    <include refid="Base_Column_List" />
+    from t_tender
+    where isDelete=0 
+    limit #{currentPage},#{size}
+  </select>
+  <select id="selectAllTenderFrontCount" resultType="java.lang.Integer" parameterType="com.hc.pojo.Tender">
+    select count(*) from t_tender
+    where isDelete=0 
+  </select>
+  
+  <!-- 前台首页显示已经签约的 -->
+  <select id="selectAllByState" resultMap="BaseResultMap" parameterType="com.hc.pojo.Tender">
+    select 
+    <include refid="Base_Column_List" />
+    from t_tender
+    where state=1 and isDelete=0 
+    limit #{currentPage},#{size}
+  </select>
+  <select id="selectAllCountByState" resultType="java.lang.Integer" parameterType="com.hc.pojo.Tender">
+    select count(*) from t_tender
+    where state=1  and isDelete=0 
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_tender
+    where tenderId = #{tenderid,jdbcType=BIGINT}
+  </select>
+  <!-- 分页查询 -->
+  <select id="selectAllTenderByPage" resultMap="BaseResultMap"  parameterType="com.hc.pojo.Tender">
+    select 
+    <include refid="Base_Column_List" />
+    from t_tender where isDelete=0
+    <if test="tendername != null" >
+        and tenderName like '%${tendername}%'
+      </if>
+    limit #{currentPage},#{size}
+  </select>
+  
+  <select id="selectAllTender" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_tender
+  </select>
+  
+  <select id="selectTenderCount" resultType="java.lang.Integer"  parameterType="com.hc.pojo.Tender">
+    select count(*) from t_tender where isDelete=0
+    <if test="tendername != null" >
+        and tenderName like '%${tendername}%'
+    </if>
+  </select>
+  
+  <!-- 软删除 -->
+  <select id="softDeleteTender" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_tender where isDelete=1
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_tender
+    where tenderId = #{tenderid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hc.pojo.Tender" >
+    insert into t_tender (tenderId, companyId, tenderName, 
+      userID, finishTime, isDelete, 
+      checkId, bidId, state, detail
+      )
+    values (#{tenderid,jdbcType=BIGINT}, #{companyid,jdbcType=BIGINT}, #{tendername,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=BIGINT}, #{finishtime,jdbcType=TIMESTAMP}, #{isdelete,jdbcType=TINYINT}, 
+      #{checkid,jdbcType=INTEGER}, #{bidid,jdbcType=BIGINT}, #{state,jdbcType=TINYINT}, #{detail}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.Tender" >
+    insert into t_tender
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tenderid != null" >
+        tenderId,
+      </if>
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="tendername != null" >
+        tenderName,
+      </if>
+      <if test="userid != null" >
+        userID,
+      </if>
+      <if test="finishtime != null" >
+        finishTime,
+      </if>
+      <if test="isdelete != null" >
+        isDelete,
+      </if>
+      <if test="checkid != null" >
+        checkId,
+      </if>
+      <if test="bidid != null" >
+        bidId,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="detail != null" >
+        detail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tenderid != null" >
+        #{tenderid,jdbcType=BIGINT},
+      </if>
+      <if test="companyid != null" >
+        #{companyid,jdbcType=BIGINT},
+      </if>
+      <if test="tendername != null" >
+        #{tendername,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="finishtime != null" >
+        #{finishtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=TINYINT},
+      </if>
+      <if test="checkid != null" >
+        #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="bidid != null" >
+        #{bidid,jdbcType=BIGINT},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="detail != null" >
+        #{detail},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.Tender" >
+    update t_tender
+    <set >
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=BIGINT},
+      </if>
+      <if test="tendername != null" >
+        tenderName = #{tendername,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userID = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="finishtime != null" >
+        finishTime = #{finishtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null" >
+        isDelete = #{isdelete,jdbcType=TINYINT},
+      </if>
+      <if test="checkid != null" >
+        checkId = #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="bidid != null" >
+        bidId = #{bidid,jdbcType=BIGINT},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="detail != null" >
+        detail = #{detail},
+      </if>
+    </set>
+    where tenderId = #{tenderid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hc.pojo.Tender" >
+    update t_tender
+    set companyId = #{companyid,jdbcType=BIGINT},
+      tenderName = #{tendername,jdbcType=VARCHAR},
+      userID = #{userid,jdbcType=BIGINT},
+      finishTime = #{finishtime,jdbcType=TIMESTAMP},
+      isDelete = #{isdelete,jdbcType=TINYINT},
+      checkId = #{checkid,jdbcType=INTEGER},
+      bidId = #{bidid,jdbcType=BIGINT},
+      state = #{state,jdbcType=TINYINT},
+      detail = #{detail},
+    where tenderId = #{tenderid,jdbcType=BIGINT}
+  </update>
+</mapper>

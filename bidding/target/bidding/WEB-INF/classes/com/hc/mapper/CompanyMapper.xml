@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hc.dao.CompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.hc.pojo.Company" >
+    <id column="companyId" property="companyid" jdbcType="BIGINT" />
+    <result column="companyName" property="companyname" jdbcType="VARCHAR" />
+    <result column="addressId" property="addressid" jdbcType="BIGINT" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="userID" property="userid" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    companyId, companyName, addressId, tel, userID
+  </sql>
+  <!-- 根据userid查公司 -->
+  <select id="selectCompanyByUid" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_company
+    where userID = #{userid}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_company
+    where companyId = #{companyid,jdbcType=BIGINT}
+  </select>
+  <select id="selectAllCompanyByPage" resultMap="BaseResultMap" parameterType="com.hc.pojo.Company">
+    select 
+    <include refid="Base_Column_List" />
+    from t_company where 1=1
+    <if test="companyname != null" >
+        and companyName like '%${companyname}%'
+     </if>
+    limit #{currentPage},#{size}
+  </select>
+  <select id="selectAllCompany" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_company 
+  </select>
+  
+  <select id="selectCompanyCount" resultType="java.lang.Integer" parameterType="com.hc.pojo.Company">
+    select count(*) from t_company where 1=1
+    <if test="companyname != null" >
+        and companyName like '%${companyname}%'
+     </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_company
+    where companyId = #{companyid,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hc.pojo.Company" >
+    insert into t_company (companyId, companyName, addressId, 
+      tel, userID)
+    values (#{companyid,jdbcType=BIGINT}, #{companyname,jdbcType=VARCHAR}, #{addressid,jdbcType=BIGINT}, 
+      #{tel,jdbcType=VARCHAR}, #{userid,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hc.pojo.Company" >
+    insert into t_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="companyid != null" >
+        companyId,
+      </if>
+      <if test="companyname != null" >
+        companyName,
+      </if>
+      <if test="addressid != null" >
+        addressId,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="userid != null" >
+        userID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="companyid != null" >
+        #{companyid,jdbcType=BIGINT},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="addressid != null" >
+        #{addressid,jdbcType=BIGINT},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hc.pojo.Company" >
+    update t_company
+    <set >
+      <if test="companyname != null" >
+        companyName = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="addressid != null" >
+        addressId = #{addressid,jdbcType=BIGINT},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userID = #{userid,jdbcType=BIGINT},
+      </if>
+    </set>
+    where companyId = #{companyid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hc.pojo.Company" >
+    update t_company
+    set companyName = #{companyname,jdbcType=VARCHAR},
+      addressId = #{addressid,jdbcType=BIGINT},
+      tel = #{tel,jdbcType=VARCHAR},
+      userID = #{userid,jdbcType=BIGINT}
+    where companyId = #{companyid,jdbcType=BIGINT}
+  </update>
+</mapper>
